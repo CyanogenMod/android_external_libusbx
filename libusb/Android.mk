@@ -20,7 +20,7 @@ LOCAL_C_INCLUDES += \
 LOCAL_CFLAGS := -D_SHARED_LIBRARY_
 LOCAL_MODULE_TAGS:= optional
 LOCAL_MODULE:= libusbx
-include $(BUILD_STATIC_LIBRARY)
+#include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
@@ -45,7 +45,7 @@ ifeq ($(HOST_OS),darwin)
 endif
 
 ifeq ($(HOST_OS),windows)
-  LOCAL_SRC_FILES += os/windows_usbfs.c
+  LOCAL_SRC_FILES += os/windows_usb.c os/threads_windows.c os/poll_windows.c
 endif
 
 

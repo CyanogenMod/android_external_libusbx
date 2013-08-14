@@ -1,6 +1,16 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+#if defined(__APPLE__)
+#define OS_DARWIN
+#define THREADS_POSIX
+#elif defined(__linux__)
+#define OS_LINUX
+#define THREADS_POSIX
+#else
+#define OS_WINDOWS
+#endif
+
 /* Default visibility */
 #define DEFAULT_VISIBILITY __attribute__((visibility("default")))
 
@@ -38,7 +48,9 @@
 #define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the <poll.h> header file. */
+#ifndef OS_WINDOWS
 #define HAVE_POLL_H 1
+#endif
 
 /* Define to 1 if you have the <signal.h> header file. */
 #define HAVE_SIGNAL_H 1
@@ -56,13 +68,17 @@
 #define HAVE_STRING_H 1
 
 /* Define to 1 if the system has the type `struct timespec'. */
+#ifndef OS_WINDOWS
 #define HAVE_STRUCT_TIMESPEC 1
+#endif
 
 /* syslog() function available */
 #define HAVE_SYSLOG_FUNC 1
 
 /* Define to 1 if you have the <syslog.h> header file. */
+#ifndef OS_WINDOWS
 #define HAVE_SYSLOG_H 1
+#endif
 
 /* Define to 1 if you have the <sys/socket.h> header file. */
 /* #undef HAVE_SYS_SOCKET_H */
@@ -83,25 +99,8 @@
    */
 #define LT_OBJDIR ".libs/"
 
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-/* #undef NO_MINUS_C_MINUS_O */
-
-#if defined(__APPLE__)
-#define OS_DARWIN
-#define THREADS_POSIX
-#elif defined(__linux__)
-#define OS_LINUX
-#define THREADS_POSIX
-#endif
-
-/* Linux backend */
-/* #undef OS_LINUX */
-
 /* OpenBSD/NetBSD backend */
 /* #undef OS_OPENBSD */
-
-/* Windows backend */
-/* #undef OS_WINDOWS */
 
 /* Name of package */
 #define PACKAGE "libusbx"
@@ -125,7 +124,11 @@
 #define PACKAGE_VERSION "1.0.16"
 
 /* type of second poll() argument */
+#ifndef OS_WINDOWS
 #define POLL_NFDS_TYPE nfds_t
+#else
+#define POLL_NFDS_TYPE unsigned int
+#endif
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
