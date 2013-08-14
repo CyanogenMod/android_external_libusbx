@@ -40,6 +40,8 @@
   #include <objc/objc-auto.h>
 #endif
 
+#include <inttypes.h>
+
 #include "darwin_usb.h"
 
 /* async event thread */
@@ -307,6 +309,9 @@ static void darwin_clear_iterator (io_iterator_t iter) {
     IOObjectRelease (device);
 }
 
+#include <dlfcn.h>
+void (*registerThreadWithCollector_fn)(void) = NULL;
+
 static void *darwin_event_thread_main (void *arg0) {
   IOReturn kresult;
   struct libusb_context *ctx = (struct libusb_context *)arg0;
@@ -321,7 +326,15 @@ static void *darwin_event_thread_main (void *arg0) {
      This is required because, unlike NSThreads, pthreads are
      not automatically registered. Although we don't use
      Objective-C, we use CoreFoundation, which does. */
-  objc_registerThreadWithCollector();
+  if (!registerThreadWithCollector_fn) {
+    registerThreadWithCollector_fn = (void(*)(void)) dlsym(RTLD_NEXT, "objc_registerThreadWithCollector");
+    if (registerThreadWithCollector_fn) {
+        (*registerThreadWithCollector_fn)();
+    }
+    else {
+      // fail?
+    }
+  }
 #endif
 
   /* hotplug (device arrival/removal) sources */
