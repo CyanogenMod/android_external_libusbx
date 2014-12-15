@@ -34,10 +34,13 @@ LOCAL_SRC_FILES:= \
 LOCAL_C_INCLUDES += \
  external/libusbx/ \
  external/libusbx/libusb/ \
- external/libusbx/libusb/os
+ external/libusbx/libusb/os \
+ external/libnl/include/
 
+LOCAL_CFLAGS := -D_SHARED_LIBRARY_
 ifeq ($(HOST_OS),linux)
-  LOCAL_SRC_FILES += os/linux_usbfs.c os/threads_posix.c os/poll_posix.c
+  LOCAL_SRC_FILES += os/linux_usbfs.c os/threads_posix.c os/poll_posix.c os/linux_netlink.c
+  LOCAL_CFLAGS += -DHAVE_LINUX_NETLINK_H
 endif
 
 ifeq ($(HOST_OS),darwin)
@@ -49,7 +52,6 @@ ifeq ($(HOST_OS),windows)
 endif
 
 
-LOCAL_CFLAGS := -D_SHARED_LIBRARY_
 LOCAL_MODULE_TAGS:= optional
 LOCAL_MODULE:= libusbx
 include $(BUILD_HOST_STATIC_LIBRARY)
